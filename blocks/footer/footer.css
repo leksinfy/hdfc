@@ -1,11 +1,14 @@
 footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
+  
+background-color: #000000;
+  color: #ffffff; /* Makes all footer text white */
+  font-size: large;
+
 }
 
 footer .footer > div {
   margin: auto;
-  max-width: 1200px;
+  max-width: 429px;
   padding: 40px 24px 24px;
 }
 
