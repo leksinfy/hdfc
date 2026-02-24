@@ -55,8 +55,43 @@ function maskMobileNumber(mobileNumber) {
   // Mask first 5 digits and keep the rest
   return ` ${'*'.repeat(5)}${value.substring(5)}`;
 }
+function emicalculation(p, n, r) {
+  // helper: parse localized/labelled numbers safely
+  const parseNum = (val) => {
+    if (val == null) return NaN;
+    // Convert to string, remove anything that's not digit, dot, or minus.
+    // This strips commas, spaces, currency symbols, and trailing " %".
+    const cleaned = String(val).replace(/[^0-9.\-]/g, '');
+    // Edge: multiple dots from bad formats can still break; Number will handle to NaN.
+    return Number(cleaned);
+  };
+ 
+  const P = parseNum(p);
+  const N = parseNum(n);
+  const annualRatePercent = parseNum(r);
+ 
+  // Validate
+  if (!Number.isFinite(P) || !Number.isFinite(N) || !Number.isFinite(annualRatePercent)) return 0;
+  if (P <= 0 || N <= 0) return 0;
+ 
+  // Convert annual % to monthly decimal
+  const monthlyRate = (annualRatePercent / 12) / 100;
+ 
+  // Zero-interest case
+  if (monthlyRate === 0) return Number((P / N).toFixed(2));
+ 
+  // EMI = P * r * (1+r)^n / ((1+r)^n - 1)
+  const pow = Math.pow(1 + monthlyRate, N);
+  const denom = pow - 1;
+  if (denom === 0) return 0;
+ 
+  const emi = (P * monthlyRate * pow) / denom;
+  return Number(emi.toFixed(2));
+}
+
+
 
 // eslint-disable-next-line import/prefer-default-export
 export {
-  getFullName, days, submitFormArrayToString, maskMobileNumber,
+  getFullName, days, submitFormArrayToString, maskMobileNumber, emicalculation,
 };
